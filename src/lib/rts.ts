@@ -76,13 +76,13 @@ export function getRTSDate(date: Date): RTSDate {
     };
   } else {
     // It's the 365th or 366th day! Global Holiday time.
-    const holidayDayIndex = dayOfYear - 364; 
+    const holidayDayIndex = dayOfYear - 364; // 1 or 2
     
     return {
       year,
       month: 13, // Fallback to last month
       day: 28 + holidayDayIndex, // Fallback day, though won't be used in UI grid
-      monthName: RTS_MONTHS[12], 
+      monthName: holidayDayIndex === 1 ? "Unum" : "Duo",
       isGlobalHoliday: true,
       holidayDayIndex,
     };

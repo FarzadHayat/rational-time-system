@@ -135,8 +135,8 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Global Holiday</h4>
-                  <p>13 × 28 = 364. The 365th day sits outside the calendar — no month, no weekday. A universal day of rest. Leap years add a second holiday.</p>
+                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Global Holiday (Unum & Duo)</h4>
+                  <p>13 × 28 = 364. The 365th day sits outside the calendar — no month, no weekday. It is a universal day of rest called <strong>Unum</strong>. Leap years add a second holiday called <strong>Duo</strong>.</p>
                 </div>
 
                 <div>
@@ -153,7 +153,7 @@ export default function Dashboard() {
                 <div>
                   <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Notation & Formats</h4>
                   <p className="mb-1">Dates are written as <span className="bg-white/10 px-1 rounded">YYYY.MM.DD</span> (e.g. 2026.07.15).</p>
-                  <p>Because the Global Holiday sits outside the month grid, it is written purely as <span className="bg-white/10 px-1 rounded">YYYY.H1</span> (and <span className="bg-white/10 px-1 rounded">YYYY.H2</span> for leap years).</p>
+                  <p>Because the Global Holidays sit outside the month grid, they are written purely as <span className="bg-white/10 px-1 rounded">YYYY.Unum</span> (and <span className="bg-white/10 px-1 rounded">YYYY.Duo</span> for leap years).</p>
                 </div>
 
                 <div>
