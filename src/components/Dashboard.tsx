@@ -84,21 +84,16 @@ export default function Dashboard() {
           </div>
           
           <div className="w-full max-w-[350px]">
+            <DecimalClock />
+          </div>
+
+          <div className="w-full max-w-[350px]">
             <RTSCalendar 
               ref={calendarRef}
               selectedRTSDate={selectedRTSDate}
               onDayClick={setSelectedRTSDate}
               onLiveClick={() => setSelectedRTSDate(null)}
             />
-          </div>
-
-          <div className="w-full max-w-[350px] text-xs text-gray-500 font-mono leading-relaxed mt-2 text-center lg:text-left">
-            <p className="mb-2">
-              The standard day is divided into 10 hours, each containing 100 minutes, and 100 seconds.
-            </p>
-            <p>
-              Time zones are eliminated. The entire globe shares a single, synchronized timeline.
-            </p>
           </div>
         </div>
 
@@ -109,12 +104,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Right Column: Decimal Clock, Info */}
+        {/* Right Column: Info Accordions */}
         <div className="lg:col-span-3 flex flex-col space-y-6 lg:space-y-8 z-20 items-center lg:items-end lg:justify-center text-center lg:text-right">
-          
-          <div className="w-full max-w-[350px]">
-            <DecimalClock />
-          </div>
           
           <div className="w-full max-w-[350px] p-6 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-400 font-mono leading-relaxed backdrop-blur-sm text-left flex flex-col">
             
@@ -128,7 +119,17 @@ export default function Dashboard() {
             
             <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'info' ? 'max-h-[1200px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-4 pt-2">
+                
                 <div>
+                  <p className="mb-2">
+                    The standard day is divided into 10 hours, each containing 100 minutes, and 100 seconds. 
+                  </p>
+                  <p>
+                    Time zones are eliminated. The entire globe shares a single, synchronized timeline.
+                  </p>
+                </div>
+
+                <div className="border-t border-white/10 pt-4">
                   <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">13 Equal Months</h4>
                   <p>Every month has exactly 28 days — 4 perfect weeks. Every month starts on Monday. Your birthday falls on the same weekday, every year, forever.</p>
                 </div>
