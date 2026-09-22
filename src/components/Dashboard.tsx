@@ -9,9 +9,8 @@ import { CalendarDays, X, ChevronDown } from "lucide-react";
 
 export default function Dashboard() {
   const [selectedRTSDate, setSelectedRTSDate] = useState<RTSDate | null>(null);
-  const [infoExpanded, setInfoExpanded] = useState(false);
-  const [whyExpanded, setWhyExpanded] = useState(false);
-  const [adoptionExpanded, setAdoptionExpanded] = useState(false);
+  type AccordionPanel = 'info' | 'why' | 'adoption' | null;
+  const [activeAccordion, setActiveAccordion] = useState<AccordionPanel>('info');
   const calendarRef = useRef<RTSCalendarHandle>(null);
 
   // Derive Gregorian date from the selected RTS date
@@ -111,11 +110,11 @@ export default function Dashboard() {
           <div className="w-full max-w-[350px] p-6 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-400 font-mono leading-relaxed backdrop-blur-sm text-left flex flex-col">
             
             <button 
-              onClick={() => setInfoExpanded(!infoExpanded)}
+              onClick={() => setActiveAccordion(activeAccordion === 'info' ? null : 'info')}
               className="w-full flex items-center justify-between text-gray-200 mb-3 font-bold uppercase tracking-wider text-xs hover:text-white transition"
             >
               <span>How it works</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${infoExpanded ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'info' ? 'rotate-180' : ''}`} />
             </button>
             
             <p className="mb-2">
@@ -125,7 +124,7 @@ export default function Dashboard() {
               Time zones are eliminated. The entire globe shares a single, synchronized timeline.
             </p>
 
-            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${infoExpanded ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'info' ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-4 border-t border-white/10 pt-4">
                 
                 <div>
@@ -155,14 +154,14 @@ export default function Dashboard() {
             {/* WHY SWITCH? (Sales Pitch) */}
             <div className="border-t border-white/10 mt-6 pt-4">
               <button 
-                onClick={() => setWhyExpanded(!whyExpanded)}
+                onClick={() => setActiveAccordion(activeAccordion === 'why' ? null : 'why')}
                 className="w-full flex items-center justify-between text-gray-200 font-bold uppercase tracking-wider text-xs hover:text-white transition"
               >
                 <span>Why switch?</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${whyExpanded ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'why' ? 'rotate-180' : ''}`} />
               </button>
 
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${whyExpanded ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'why' ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
                 <div className="space-y-4 pt-2">
                   <div>
                     <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;Your Time or Mine?&quot;</h4>
@@ -199,14 +198,14 @@ export default function Dashboard() {
             {/* THE TRANSITION (Adoption Strategy) */}
             <div className="border-t border-white/10 mt-6 pt-4">
               <button 
-                onClick={() => setAdoptionExpanded(!adoptionExpanded)}
+                onClick={() => setActiveAccordion(activeAccordion === 'adoption' ? null : 'adoption')}
                 className="w-full flex items-center justify-between text-gray-200 font-bold uppercase tracking-wider text-xs hover:text-white transition"
               >
                 <span>The Transition</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${adoptionExpanded ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'adoption' ? 'rotate-180' : ''}`} />
               </button>
 
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${adoptionExpanded ? 'max-h-[800px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'adoption' ? 'max-h-[800px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
                 <div className="space-y-4 pt-2">
 
                   <p className="text-gray-500 italic">RTS isn&apos;t a revolution — it&apos;s a parallel system. No one wakes up to a new clock. You adopt it when it makes your life easier.</p>
