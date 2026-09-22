@@ -6,6 +6,7 @@ import RTSCalendar, { RTSCalendarHandle } from "@/components/RTSCalendar";
 import DaylightGlobe from "@/components/DaylightGlobe";
 import { RTSDate, getGregorianDateFromRTS, padZero, getRTSDate } from "@/lib/rts";
 import { CalendarDays, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Dashboard() {
   const [selectedRTSDate, setSelectedRTSDate] = useState<RTSDate | null>(null);
@@ -117,52 +118,62 @@ export default function Dashboard() {
               <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'info' ? 'rotate-180' : ''}`} />
             </button>
             
-            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'info' ? 'max-h-[1200px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-              <div className="space-y-4 pt-2">
-                
-                <div>
-                  <p className="mb-2">
-                    The standard day is divided into 10 hours, each containing 100 minutes, and 100 seconds. 
-                  </p>
-                  <p>
-                    Time zones are eliminated. The entire globe shares a single, synchronized timeline.
-                  </p>
-                </div>
+            <AnimatePresence initial={false}>
+              {activeAccordion === 'info' && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                  animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+                  exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="space-y-4 pt-2">
+                    
+                    <div>
+                      <p className="mb-2">
+                        The standard day is divided into 10 hours, each containing 100 minutes, and 100 seconds. 
+                      </p>
+                      <p>
+                        Time zones are eliminated. The entire globe shares a single, synchronized timeline.
+                      </p>
+                    </div>
 
-                <div className="border-t border-white/10 pt-4">
-                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">13 Equal Months</h4>
-                  <p>Every month has exactly 28 days — 4 perfect weeks. Every month starts on Monday. Your birthday falls on the same weekday, every year, forever.</p>
-                </div>
+                    <div className="border-t border-white/10 pt-4">
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">13 Equal Months</h4>
+                      <p>Every month has exactly 28 days — 4 perfect weeks. Every month starts on Monday. Your birthday falls on the same weekday, every year, forever.</p>
+                    </div>
 
-                <div>
-                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Global Holiday</h4>
-                  <p>13 × 28 = 364. The 365th day sits outside the calendar — no month, no weekday. It is a universal day of rest called <strong>Year Day</strong>. Leap years add a second holiday called <strong>Leap Day</strong>.</p>
-                </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Global Holiday</h4>
+                      <p>13 × 28 = 364. The 365th day sits outside the calendar — no month, no weekday. It is a universal day of rest called <strong>Year Day</strong>. Leap years add a second holiday called <strong>Leap Day</strong>.</p>
+                    </div>
 
-                <div>
-                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Month Names</h4>
-                  <p>Latin ordinals: Primus, Secundus, Tertius… through Duodecimus. The 13th month is Terminus — &quot;the boundary.&quot;</p>
-                </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Month Names</h4>
+                      <p>Latin ordinals: Primus, Secundus, Tertius… through Duodecimus. The 13th month is Terminus — &quot;the boundary.&quot;</p>
+                    </div>
 
-                <div>
-                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Decimal Conversion</h4>
-                  <p className="mb-1">1 decimal second ≈ 0.864 standard seconds.</p>
-                  <p>1 decimal hour = 2 hrs 24 min standard.</p>
-                </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Decimal Conversion</h4>
+                      <p className="mb-1">1 decimal second ≈ 0.864 standard seconds.</p>
+                      <p>1 decimal hour = 2 hrs 24 min standard.</p>
+                    </div>
 
-                <div>
-                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Notation & Formats</h4>
-                  <p className="mb-1">Dates are written as <span className="bg-white/10 px-1 rounded">YYYY.MM.DD</span> (e.g. 2026.07.15).</p>
-                  <p>Because the Global Holidays sit outside the month grid, they are written purely as <span className="bg-white/10 px-1 rounded">YYYY.H1</span> (and <span className="bg-white/10 px-1 rounded">YYYY.H2</span> for leap years).</p>
-                </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Notation & Formats</h4>
+                      <p className="mb-1">Dates are written as <span className="bg-white/10 px-1 rounded">YYYY.MM.DD</span> (e.g. 2026.07.15).</p>
+                      <p>Because the Global Holidays sit outside the month grid, they are written purely as <span className="bg-white/10 px-1 rounded">YYYY.H1</span> (and <span className="bg-white/10 px-1 rounded">YYYY.H2</span> for leap years).</p>
+                    </div>
 
-                <div>
-                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Historical Lineage</h4>
-                  <p>RTS is a modern fusion of three brilliant historical systems: the 13-month International Fixed Calendar (used by Kodak from 1928–1989), French Republican Decimal Time (1793), and the timezone-free Swatch Internet Time (1998).</p>
-                </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Historical Lineage</h4>
+                      <p>RTS is a modern fusion of three brilliant historical systems: the 13-month International Fixed Calendar (used by Kodak from 1928–1989), French Republican Decimal Time (1793), and the timezone-free Swatch Internet Time (1998).</p>
+                    </div>
 
-              </div>
-            </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* WHY SWITCH? (Sales Pitch) */}
             <div className="border-t border-white/10 mt-6 pt-4">
@@ -174,38 +185,48 @@ export default function Dashboard() {
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'why' ? 'rotate-180' : ''}`} />
               </button>
 
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'why' ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-                <div className="space-y-4 pt-2">
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;Your Time or Mine?&quot;</h4>
-                    <p>Scheduling a call across three continents shouldn&apos;t require a conversion chart. Calculating your actual arrival time after a 14-hour flight shouldn&apos;t feel like a logic puzzle. In RTS, 04:00 is 04:00 everywhere.</p>
+              <AnimatePresence initial={false}>
+              {activeAccordion === 'why' && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                  animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+                  exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="space-y-4 pt-2">
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;Your Time or Mine?&quot;</h4>
+                      <p>Scheduling a call across three continents shouldn&apos;t require a conversion chart. Calculating your actual arrival time after a 14-hour flight shouldn&apos;t feel like a logic puzzle. In RTS, 04:00 is 04:00 everywhere.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Daylight Saving Ritual</h4>
+                      <p>Twice a year, clocks jump. Meetings are missed. Sleep schedules break. Entire countries debate whether to keep doing it. RTS ends the ritual permanently.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Developer Nightmare</h4>
+                      <p>Eradicate complex <span className="bg-white/10 px-1 rounded">tzdata</span> libraries, offset bugs, and leap second edge-cases from codebases entirely.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;What&apos;s 2:47 Plus 3:38?&quot;</h4>
+                      <p>Base-60 arithmetic is broken for mental math. Quick — is that 6:25 or 6:15? In decimal time, durations just add up like normal numbers. Time tracking becomes trivial.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">30 Days Hath September...</h4>
+                      <p>Stop memorizing which months have 28, 30, or 31 days. Stop pulling up a calendar app just to figure out what day of the week the 17th falls on. In RTS, the 17th is always a Wednesday. Always.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Unequal Quarters</h4>
+                      <p>Q1 has fewer days than Q3. Monthly payroll hits different depending on the month. Billing cycles never line up. In RTS, every quarter is exactly 91 days.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Final Holdout</h4>
+                      <p>We weigh in grams and measure in meters — clean, base-10 systems built for logic. Yet we measure our lives using a base-60 system invented by ancient Babylonians. Time is the last major metric waiting to be modernized.</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Daylight Saving Ritual</h4>
-                    <p>Twice a year, clocks jump. Meetings are missed. Sleep schedules break. Entire countries debate whether to keep doing it. RTS ends the ritual permanently.</p>
-                  </div>
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Developer Nightmare</h4>
-                    <p>Eradicate complex <span className="bg-white/10 px-1 rounded">tzdata</span> libraries, offset bugs, and leap second edge-cases from codebases entirely.</p>
-                  </div>
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;What&apos;s 2:47 Plus 3:38?&quot;</h4>
-                    <p>Base-60 arithmetic is broken for mental math. Quick — is that 6:25 or 6:15? In decimal time, durations just add up like normal numbers. Time tracking becomes trivial.</p>
-                  </div>
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">30 Days Hath September...</h4>
-                    <p>Stop memorizing which months have 28, 30, or 31 days. Stop pulling up a calendar app just to figure out what day of the week the 17th falls on. In RTS, the 17th is always a Wednesday. Always.</p>
-                  </div>
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Unequal Quarters</h4>
-                    <p>Q1 has fewer days than Q3. Monthly payroll hits different depending on the month. Billing cycles never line up. In RTS, every quarter is exactly 91 days.</p>
-                  </div>
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Final Holdout</h4>
-                    <p>We weigh in grams and measure in meters — clean, base-10 systems built for logic. Yet we measure our lives using a base-60 system invented by ancient Babylonians. Time is the last major metric waiting to be modernized.</p>
-                  </div>
-                </div>
-              </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
             </div>
 
             {/* THE TRANSITION (Adoption Strategy) */}
@@ -218,41 +239,45 @@ export default function Dashboard() {
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'adoption' ? 'rotate-180' : ''}`} />
               </button>
 
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'adoption' ? 'max-h-[800px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-                <div className="space-y-4 pt-2">
-
-                  <p className="text-gray-500 italic">RTS isn&apos;t a revolution — it&apos;s a parallel system. No one wakes up to a new clock. You adopt it when it makes your life easier.</p>
-
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
-                      <span className="text-blue-400 mr-1">01</span> Dual Display
-                    </h4>
-                    <p>Clocks, apps, and dashboards show both systems side by side — like road signs in countries transitioning to metric. Familiarity builds naturally.</p>
+              <AnimatePresence initial={false}>
+              {activeAccordion === 'adoption' && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                  animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+                  exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="space-y-4 pt-2">
+                    <p className="text-gray-500 italic">RTS isn&apos;t a revolution — it&apos;s a parallel system. No one wakes up to a new clock. You adopt it when it makes your life easier.</p>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                        <span className="text-blue-400 mr-1">01</span> Dual Display
+                      </h4>
+                      <p>Clocks, apps, and dashboards show both systems side by side — like road signs in countries transitioning to metric. Familiarity builds naturally.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                        <span className="text-blue-400 mr-1">02</span> Industry First
+                      </h4>
+                      <p>Global tech, finance, and aviation already use UTC internally. RTS replaces UTC as the coordination layer — no public-facing change required.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                        <span className="text-blue-400 mr-1">03</span> Opt-In Culture
+                      </h4>
+                      <p>Operating systems and phones offer RTS as a display option. Early adopters switch their personal devices. Social proof does the rest.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                        <span className="text-blue-400 mr-1">04</span> Sunset Legacy
+                      </h4>
+                      <p>Once a critical mass is reached, the Gregorian calendar becomes the &quot;imperial&quot; system — still understood, rarely used. The transition completes itself.</p>
+                    </div>
                   </div>
-
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
-                      <span className="text-blue-400 mr-1">02</span> Industry First
-                    </h4>
-                    <p>Global tech, finance, and aviation already use UTC internally. RTS replaces UTC as the coordination layer — no public-facing change required.</p>
-                  </div>
-
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
-                      <span className="text-blue-400 mr-1">03</span> Opt-In Culture
-                    </h4>
-                    <p>Operating systems and phones offer RTS as a display option. Early adopters switch their personal devices. Social proof does the rest.</p>
-                  </div>
-
-                  <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
-                      <span className="text-blue-400 mr-1">04</span> Sunset Legacy
-                    </h4>
-                    <p>Once a critical mass is reached, the Gregorian calendar becomes the &quot;imperial&quot; system — still understood, rarely used. The transition completes itself.</p>
-                  </div>
-
-                </div>
-              </div>
+                </motion.div>
+              )}
+              </AnimatePresence>
             </div>
 
           </div>
