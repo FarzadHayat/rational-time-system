@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import DecimalClock from "@/components/DecimalClock";
-import RTSCalendar from "@/components/RTSCalendar";
+import RTSCalendar, { RTSCalendarHandle } from "@/components/RTSCalendar";
 import DaylightGlobe from "@/components/DaylightGlobe";
 import { RTSDate, getGregorianDateFromRTS, padZero } from "@/lib/rts";
 import { CalendarDays, X } from "lucide-react";
 
 export default function Dashboard() {
   const [selectedRTSDate, setSelectedRTSDate] = useState<RTSDate | null>(null);
+  const calendarRef = useRef<RTSCalendarHandle>(null);
 
   // Derive Gregorian date from the selected RTS date
   const gregorianEquivalent = selectedRTSDate 
@@ -53,7 +54,10 @@ export default function Dashboard() {
           </div>
 
           <button 
-            onClick={() => setSelectedRTSDate(null)}
+            onClick={() => {
+              setSelectedRTSDate(null);
+              if (calendarRef.current) calendarRef.current.resetToLive();
+            }}
             className="ml-2 p-1.5 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white"
           >
             <X className="w-4 h-4" />
@@ -77,8 +81,10 @@ export default function Dashboard() {
           
           <div className="max-w-[320px]">
             <RTSCalendar 
+              ref={calendarRef}
               selectedRTSDate={selectedRTSDate}
               onDayClick={setSelectedRTSDate}
+              onLiveClick={() => setSelectedRTSDate(null)}
             />
           </div>
         </div>

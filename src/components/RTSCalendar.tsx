@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { getRTSDate, RTSDate, RTS_MONTHS } from "@/lib/rts";
 import { motion } from "framer-motion";
 import { Sparkles, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
@@ -9,10 +9,16 @@ interface RTSCalendarProps {
   simulatedDate?: Date | null;
   selectedRTSDate?: RTSDate | null;
   onDayClick?: (date: RTSDate) => void;
+  onLiveClick?: () => void;
 }
 
-export default function RTSCalendar({ simulatedDate, selectedRTSDate, onDayClick }: RTSCalendarProps) {
-  const [liveDate, setLiveDate] = useState<RTSDate | null>(null);
+export interface RTSCalendarHandle {
+  resetToLive: () => void;
+}
+
+const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
+  ({ simulatedDate, selectedRTSDate, onDayClick, onLiveClick }, ref) => {
+    const [liveDate, setLiveDate] = useState<RTSDate | null>(null);
   
   // viewState tracks what the user is currently looking at
   const [viewState, setViewState] = useState<{
@@ -70,7 +76,18 @@ export default function RTSCalendar({ simulatedDate, selectedRTSDate, onDayClick
     if (liveDate) {
       setViewState({ year: liveDate.year, month: liveDate.month, isHoliday: liveDate.isGlobalHoliday });
     }
+    if (onLiveClick) {
+      onLiveClick();
+    }
   };
+
+  useImperativeHandle(ref, () => ({
+    resetToLive: () => {
+      if (liveDate) {
+        setViewState({ year: liveDate.year, month: liveDate.month, isHoliday: liveDate.isGlobalHoliday });
+      }
+    }
+  }));
 
   if (!liveDate || !viewState) {
     return <div className="animate-pulse h-80 bg-gray-800 rounded-xl w-80"></div>;
@@ -183,7 +200,12 @@ export default function RTSCalendar({ simulatedDate, selectedRTSDate, onDayClick
       </div>
     </div>
   );
-}
+  }
+);
+
+RTSCalendar.displayName = "RTSCalendar";
+
+export default RTSCalendar;
 
 function padZero(num: number): string {
   return num.toString().padStart(2, '0');
