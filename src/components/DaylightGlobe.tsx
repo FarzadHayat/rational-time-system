@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 import * as THREE from 'three';
 
@@ -29,22 +29,28 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
   const activeDate = simulatedDate || new Date();
   const sunPos = getSunPosition(activeDate);
 
+  // Create the custom lights array that react-globe.gl manages via its `lights` prop.
+  // This is the ONLY correct way to control lighting — the library owns the scene lights.
+  const customLights = useMemo(() => {
+    const ambientLight = new THREE.AmbientLight(0x333333, 0.5);
+
+    const sunLight = new THREE.DirectionalLight(0xffffff, 3);
+    const coords = latLngToVector3(sunPos.lat, sunPos.lng, 5);
+    sunLight.position.copy(coords);
+
+    return [ambientLight, sunLight];
+  // We intentionally only create lights once and update position via effect
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Update light position when time changes
   useEffect(() => {
-    if (globeRef.current && globeRef.current.scene) {
-      const scene = globeRef.current.scene();
-      const sunLight = scene.getObjectByName("sunLight");
-      const sunMesh = scene.getObjectByName("sunMesh");
-      
-      const coords = latLngToVector3(sunPos.lat, sunPos.lng, 2.5); // distance 2.5x globe radius, within camera range
-      if (sunLight) {
-        sunLight.position.copy(coords);
-      }
-      if (sunMesh) {
-        sunMesh.position.copy(coords);
-      }
+    const sunLight = customLights.find((l): l is THREE.DirectionalLight => l instanceof THREE.DirectionalLight);
+    if (sunLight) {
+      const coords = latLngToVector3(sunPos.lat, sunPos.lng, 5);
+      sunLight.position.copy(coords);
     }
-  }, [sunPos.lat, sunPos.lng]);
+  }, [sunPos.lat, sunPos.lng, customLights]);
 
   if (!mounted) {
     return <div className="w-full h-full min-h-[500px] flex items-center justify-center text-gray-500 font-mono text-sm">Initializing Universal View...</div>;
@@ -61,50 +67,13 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
         atmosphereColor="lightskyblue"
         atmosphereAltitude={0.15}
         enablePointerInteraction={true}
-         onGlobeReady={() => {
-           if (globeRef.current && globeRef.current.scene) {
-             const scene = globeRef.current.scene();
-             
-             // In react-globe.gl, the default lighting is attached to the camera, not the scene!
-             // We must remove it from the camera so our custom sun light works.
-             if (globeRef.current.camera) {
-                const camera = globeRef.current.camera();
-                const cameraLights = camera.children.filter((c: any) => c.isLight);
-                cameraLights.forEach((l: any) => camera.remove(l));
-             }
-
-             // Also check the scene just in case
-             const sceneLights = scene.children.filter((c: any) => c.isLight);
-             sceneLights.forEach((l: any) => scene.remove(l));
-
-             // Add our own ambient light (very dim, for the dark side)
-             const ambientLight = new THREE.AmbientLight(0x222222, 0.4); 
-             scene.add(ambientLight);
-
-             // Add directional sun light
-             const sunLight = new THREE.DirectionalLight(0xffffff, 4); 
-             sunLight.name = "sunLight";
-             scene.add(sunLight);
-
-             // Create a visual sun orb
-             const sunGeometry = new THREE.SphereGeometry(3, 32, 32);
-             const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
-             const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
-             sunMesh.name = "sunMesh";
-             scene.add(sunMesh);
-             
-             // Initial position
-             const coords = latLngToVector3(sunPos.lat, sunPos.lng, 2.5);
-             sunLight.position.copy(coords);
-             sunMesh.position.copy(coords);
-           }
-        }}
+        lights={customLights}
       />
     </div>
   );
 }
 
-// Manual conversion since getCoords isn't exposed on the ref directly
+// Convert lat/lng to a 3D position vector for light placement
 function latLngToVector3(lat: number, lng: number, radiusScale: number = 1) {
   const GLOBE_RADIUS = 100; // default in react-globe.gl
   const r = GLOBE_RADIUS * radiusScale;
