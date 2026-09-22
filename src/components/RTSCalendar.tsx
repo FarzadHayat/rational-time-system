@@ -135,25 +135,26 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           <p className="mt-6 text-sm text-purple-300/70 max-w-[200px]">
             The grid is suspended. Enjoy the universal days of rest.
           </p>
+
+          {/* Live button overlaid at the bottom of the holiday card */}
+          <div className="absolute bottom-6 left-0 right-0 h-10 flex justify-center" onClick={(e) => e.stopPropagation()}>
+            <AnimatePresence>
+              {showLiveButton && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                  className="w-full px-8"
+                >
+                  <button onClick={resetToLive} className="text-xs bg-black/30 hover:bg-black/50 text-purple-200 hover:text-white px-4 py-2 rounded-full flex items-center transition w-full justify-center backdrop-blur-md border border-purple-500/30 shadow-lg">
+                    <RotateCcw className="w-3 h-3 mr-2" /> Return to Live Date
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </motion.div>
-        {/* Fixed height wrapper to prevent layout shift */}
-        <div className="h-10 mt-4 relative">
-          <AnimatePresence>
-            {showLiveButton && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 flex justify-center"
-              >
-                <button onClick={resetToLive} className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 px-4 py-2 rounded-full flex items-center transition w-full justify-center">
-                  <RotateCcw className="w-3 h-3 mr-2" /> Return to Live Date
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
       </div>
     );
   }
