@@ -65,7 +65,7 @@ export default function Dashboard() {
       <div className="relative z-10 w-full h-screen grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 lg:p-10 pt-24">
         
         {/* Left Column: Calendar & Info */}
-        <div className="lg:col-span-3 flex flex-col space-y-8 z-20">
+        <div className="lg:col-span-3 flex flex-col space-y-8 z-20 lg:justify-center">
           <div>
             <h1 className="text-3xl font-light tracking-widest uppercase mb-2">RTS</h1>
             <p className="text-gray-500 text-sm font-mono tracking-tight leading-relaxed max-w-xs">
@@ -75,7 +75,7 @@ export default function Dashboard() {
             </p>
           </div>
           
-          <div className="flex-1 max-w-[320px]">
+          <div className="max-w-[320px]">
             <RTSCalendar 
               selectedRTSDate={selectedRTSDate}
               onDayClick={setSelectedRTSDate}
