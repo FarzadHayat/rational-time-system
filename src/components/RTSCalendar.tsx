@@ -25,6 +25,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
     year: number;
     month: number;
     isHoliday: boolean;
+    holidayIndex?: number;
   } | null>(null);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
       // If we haven't set the view yet, or if simulatedDate changed, sync it
       setViewState(prev => {
         if (!prev || simulatedDate) {
-          return { year: now.year, month: now.month, isHoliday: now.isGlobalHoliday };
+          return { year: now.year, month: now.month, isHoliday: now.isGlobalHoliday, holidayIndex: now.holidayDayIndex };
         }
         return prev;
       });
@@ -53,9 +54,15 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
   const handlePrev = () => {
     if (!viewState) return;
     if (viewState.isHoliday) {
-      setViewState({ year: viewState.year, month: 13, isHoliday: false });
+      if (viewState.holidayIndex === 2) {
+        setViewState({ year: viewState.year, month: 13, isHoliday: true, holidayIndex: 1 });
+      } else {
+        setViewState({ year: viewState.year, month: 13, isHoliday: false });
+      }
     } else if (viewState.month === 1) {
-      setViewState({ year: viewState.year - 1, month: 13, isHoliday: true });
+      const prevYear = viewState.year - 1;
+      const isLeap = new Date(Date.UTC(prevYear, 1, 29)).getUTCMonth() === 1;
+      setViewState({ year: prevYear, month: 13, isHoliday: true, holidayIndex: isLeap ? 2 : 1 });
     } else {
       setViewState({ year: viewState.year, month: viewState.month - 1, isHoliday: false });
     }
@@ -64,9 +71,14 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
   const handleNext = () => {
     if (!viewState) return;
     if (viewState.isHoliday) {
-      setViewState({ year: viewState.year + 1, month: 1, isHoliday: false });
+      const isLeap = new Date(Date.UTC(viewState.year, 1, 29)).getUTCMonth() === 1;
+      if (viewState.holidayIndex === 1 && isLeap) {
+        setViewState({ year: viewState.year, month: 1, isHoliday: true, holidayIndex: 2 });
+      } else {
+        setViewState({ year: viewState.year + 1, month: 1, isHoliday: false });
+      }
     } else if (viewState.month === 13) {
-      setViewState({ year: viewState.year, month: 13, isHoliday: true });
+      setViewState({ year: viewState.year, month: 13, isHoliday: true, holidayIndex: 1 });
     } else {
       setViewState({ year: viewState.year, month: viewState.month + 1, isHoliday: false });
     }
@@ -74,7 +86,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
 
   const resetToLive = () => {
     if (liveDate) {
-      setViewState({ year: liveDate.year, month: liveDate.month, isHoliday: liveDate.isGlobalHoliday });
+      setViewState({ year: liveDate.year, month: liveDate.month, isHoliday: liveDate.isGlobalHoliday, holidayIndex: liveDate.holidayDayIndex });
     }
     if (onLiveClick) {
       onLiveClick();
@@ -84,7 +96,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
   useImperativeHandle(ref, () => ({
     resetToLive: () => {
       if (liveDate) {
-        setViewState({ year: liveDate.year, month: liveDate.month, isHoliday: liveDate.isGlobalHoliday });
+        setViewState({ year: liveDate.year, month: liveDate.month, isHoliday: liveDate.isGlobalHoliday, holidayIndex: liveDate.holidayDayIndex });
       }
     }
   }));
@@ -96,7 +108,8 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
   const isLiveView = 
     viewState.year === liveDate.year && 
     viewState.month === liveDate.month && 
-    viewState.isHoliday === liveDate.isGlobalHoliday;
+    viewState.isHoliday === liveDate.isGlobalHoliday &&
+    (!viewState.isHoliday || viewState.holidayIndex === liveDate.holidayDayIndex);
 
   const isSelectedDateDifferent = selectedRTSDate && (
     selectedRTSDate.year !== liveDate.year ||
@@ -118,7 +131,9 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           </button>
           <div className="text-center absolute inset-x-0 pointer-events-none">
             <h2 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-1">
-              {viewState.isHoliday ? "Global Holiday" : `Month ${padZero(viewState.month)}`}
+              {viewState.isHoliday 
+                ? (viewState.holidayIndex === 2 ? "Global Holiday II" : "Global Holiday I")
+                : `Month ${padZero(viewState.month)}`}
             </h2>
             <div className="text-xl font-light text-white tracking-wide">
               {viewState.isHoliday ? `Year ${viewState.year}` : `${RTS_MONTHS[viewState.month - 1]} ${viewState.year}`}
@@ -133,7 +148,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           <AnimatePresence mode="wait">
             {viewState.isHoliday ? (
               <motion.div 
-                key="holiday"
+                key={`holiday-${viewState.holidayIndex}`}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
@@ -141,16 +156,22 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
                 onClick={() => onDayClick && onDayClick({
                    year: viewState.year,
                    month: 13,
-                   day: 29, // Fallback index
-                   monthName: RTS_MONTHS[12],
+                   day: 28 + (viewState.holidayIndex || 1),
+                   monthName: viewState.holidayIndex === 2 ? "Leap Day" : "Year Day",
                    isGlobalHoliday: true,
-                   holidayDayIndex: 1
+                   holidayDayIndex: viewState.holidayIndex || 1
                 })}
-                className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900/60 to-purple-900/60 rounded-xl border border-purple-500/30 text-center cursor-pointer hover:border-purple-400 transition"
+                className={`absolute inset-0 flex flex-col items-center justify-center rounded-xl border text-center cursor-pointer transition 
+                  ${viewState.holidayIndex === 2 
+                    ? 'bg-gradient-to-br from-amber-900/60 to-orange-900/60 border-amber-500/30 hover:border-amber-400' 
+                    : 'bg-gradient-to-br from-indigo-900/60 to-purple-900/60 border-purple-500/30 hover:border-purple-400'}`
+                }
               >
-                <Sparkles className="w-10 h-10 text-yellow-400 mb-3 animate-pulse" />
-                <h2 className="text-2xl font-bold text-white mb-1 tracking-wider uppercase">Global Holiday</h2>
-                <p className="mt-1 text-xs text-purple-300/70 max-w-[200px]">
+                <Sparkles className={`w-10 h-10 mb-3 animate-pulse ${viewState.holidayIndex === 2 ? 'text-amber-300' : 'text-yellow-400'}`} />
+                <h2 className="text-2xl font-bold text-white mb-1 tracking-wider uppercase">
+                  {viewState.holidayIndex === 2 ? "Leap Day" : "Year Day"}
+                </h2>
+                <p className={`mt-1 text-xs max-w-[200px] ${viewState.holidayIndex === 2 ? 'text-amber-300/70' : 'text-purple-300/70'}`}>
                   A day outside of time. Enjoy the universal day of rest.
                 </p>
               </motion.div>
