@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [selectedRTSDate, setSelectedRTSDate] = useState<RTSDate | null>(null);
   const [infoExpanded, setInfoExpanded] = useState(false);
   const [whyExpanded, setWhyExpanded] = useState(false);
+  const [adoptionExpanded, setAdoptionExpanded] = useState(false);
   const calendarRef = useRef<RTSCalendarHandle>(null);
 
   // Derive Gregorian date from the selected RTS date
@@ -179,6 +180,53 @@ export default function Dashboard() {
                     <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">30 Days Hath September...</h4>
                     <p>Stop memorizing which months have 28, 30, or 31 days. Stop worrying about unequal quarters or February payroll imbalances.</p>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* THE TRANSITION (Adoption Strategy) */}
+            <div className="border-t border-white/10 mt-6 pt-4">
+              <button 
+                onClick={() => setAdoptionExpanded(!adoptionExpanded)}
+                className="w-full flex items-center justify-between text-gray-200 font-bold uppercase tracking-wider text-xs hover:text-white transition"
+              >
+                <span>The Transition</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${adoptionExpanded ? 'rotate-180' : ''}`} />
+              </button>
+
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${adoptionExpanded ? 'max-h-[800px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                <div className="space-y-4 pt-2">
+
+                  <p className="text-gray-500 italic">RTS isn&apos;t a revolution — it&apos;s a parallel system. No one wakes up to a new clock. You adopt it when it makes your life easier.</p>
+
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                      <span className="text-blue-400 mr-1">01</span> Dual Display
+                    </h4>
+                    <p>Clocks, apps, and dashboards show both systems side by side — like road signs in countries transitioning to metric. Familiarity builds naturally.</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                      <span className="text-blue-400 mr-1">02</span> Industry First
+                    </h4>
+                    <p>Global tech, finance, and aviation already use UTC internally. RTS replaces UTC as the coordination layer — no public-facing change required.</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                      <span className="text-blue-400 mr-1">03</span> Opt-In Culture
+                    </h4>
+                    <p>Operating systems and phones offer RTS as a display option. Early adopters switch their personal devices. Social proof does the rest.</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">
+                      <span className="text-blue-400 mr-1">04</span> Sunset Legacy
+                    </h4>
+                    <p>Once a critical mass is reached, the Gregorian calendar becomes the &quot;imperial&quot; system — still understood, rarely used. The transition completes itself.</p>
+                  </div>
+
                 </div>
               </div>
             </div>
