@@ -25,7 +25,7 @@ export default function DecimalClock({ simulatedDate }: { simulatedDate?: Date |
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl">
+    <div className="w-full flex flex-col items-center justify-center p-6 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl">
       <h2 className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-2">Universal RTS Time</h2>
       <div className="flex items-baseline space-x-2 font-mono tabular-nums">
         <span className="text-6xl font-light text-white">{time.hours}</span>

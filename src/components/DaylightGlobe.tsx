@@ -36,7 +36,7 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
       const sunLight = scene.getObjectByName("sunLight");
       const sunMesh = scene.getObjectByName("sunMesh");
       
-      const coords = latLngToVector3(sunPos.lat, sunPos.lng, 50); // distance 50x globe radius
+      const coords = latLngToVector3(sunPos.lat, sunPos.lng, 2.5); // distance 2.5x globe radius, within camera range
       if (sunLight) {
         sunLight.position.copy(coords);
       }
@@ -62,37 +62,39 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
         atmosphereAltitude={0.15}
         enablePointerInteraction={true}
          onGlobeReady={() => {
-           if (globeRef.current && globeRef.current.scene && globeRef.current.camera) {
+           if (globeRef.current && globeRef.current.scene) {
              const scene = globeRef.current.scene();
-             const camera = globeRef.current.camera();
              
              // In react-globe.gl, the default lighting is attached to the camera, not the scene!
              // We must remove it from the camera so our custom sun light works.
-             const cameraLights = camera.children.filter((c: any) => c.isLight);
-             cameraLights.forEach((l: any) => camera.remove(l));
+             if (globeRef.current.camera) {
+                const camera = globeRef.current.camera();
+                const cameraLights = camera.children.filter((c: any) => c.isLight);
+                cameraLights.forEach((l: any) => camera.remove(l));
+             }
 
              // Also check the scene just in case
              const sceneLights = scene.children.filter((c: any) => c.isLight);
              sceneLights.forEach((l: any) => scene.remove(l));
 
              // Add our own ambient light (very dim, for the dark side)
-             const ambientLight = new THREE.AmbientLight(0x222222, 0.2); // even dimmer
+             const ambientLight = new THREE.AmbientLight(0x222222, 0.4); 
              scene.add(ambientLight);
 
              // Add directional sun light
-             const sunLight = new THREE.DirectionalLight(0xffffff, 5); // very bright
+             const sunLight = new THREE.DirectionalLight(0xffffff, 4); 
              sunLight.name = "sunLight";
              scene.add(sunLight);
 
              // Create a visual sun orb
-             const sunGeometry = new THREE.SphereGeometry(15, 32, 32);
+             const sunGeometry = new THREE.SphereGeometry(3, 32, 32);
              const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
              const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
              sunMesh.name = "sunMesh";
              scene.add(sunMesh);
              
              // Initial position
-             const coords = latLngToVector3(sunPos.lat, sunPos.lng, 50);
+             const coords = latLngToVector3(sunPos.lat, sunPos.lng, 2.5);
              sunLight.position.copy(coords);
              sunMesh.position.copy(coords);
            }
