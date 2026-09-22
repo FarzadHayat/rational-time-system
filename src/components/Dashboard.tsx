@@ -1,42 +1,52 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import DecimalClock from "@/components/DecimalClock";
 import RTSCalendar, { RTSCalendarHandle } from "@/components/RTSCalendar";
 import DaylightGlobe from "@/components/DaylightGlobe";
-import { RTSDate, getGregorianDateFromRTS, padZero } from "@/lib/rts";
-import { CalendarDays, X, ChevronDown } from "lucide-react";
+import { RTSDate, getGregorianDateFromRTS, padZero, getRTSDate } from "@/lib/rts";
+import { CalendarDays, ChevronDown } from "lucide-react";
 
 export default function Dashboard() {
   const [selectedRTSDate, setSelectedRTSDate] = useState<RTSDate | null>(null);
+  const [liveDate, setLiveDate] = useState<RTSDate | null>(null);
   type AccordionPanel = 'info' | 'why' | 'adoption' | null;
   const [activeAccordion, setActiveAccordion] = useState<AccordionPanel>('info');
   const calendarRef = useRef<RTSCalendarHandle>(null);
 
-  // Derive Gregorian date from the selected RTS date
-  const gregorianEquivalent = selectedRTSDate 
+  useEffect(() => {
+    const updateLiveDate = () => setLiveDate(getRTSDate(new Date()));
+    updateLiveDate();
+    const interval = setInterval(updateLiveDate, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const displayDate = selectedRTSDate || liveDate;
+
+  // Derive Gregorian date from the displayed RTS date
+  const gregorianEquivalent = displayDate 
     ? getGregorianDateFromRTS(
-        selectedRTSDate.year, 
-        selectedRTSDate.month, 
-        selectedRTSDate.day, 
-        selectedRTSDate.isGlobalHoliday, 
-        selectedRTSDate.holidayDayIndex
+        displayDate.year, 
+        displayDate.month, 
+        displayDate.day, 
+        displayDate.isGlobalHoliday, 
+        displayDate.holidayDayIndex
       ) 
     : null;
 
   return (
     <>
       {/* Top Center Gregorian Equivalent */}
-      {selectedRTSDate && gregorianEquivalent && (
+      {displayDate && gregorianEquivalent && (
         <div className="fixed top-4 lg:top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 bg-black/80 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-2xl sm:rounded-full border border-white/10 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300 w-[90%] sm:w-auto">
           <div className="flex items-center space-x-2">
             <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
             <div className="flex flex-col">
               <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-gray-500 font-bold">RTS Date</span>
               <span className="text-xs sm:text-sm font-mono text-white whitespace-nowrap">
-                {selectedRTSDate.isGlobalHoliday 
-                  ? `Holiday ${selectedRTSDate.holidayDayIndex}, Year ${selectedRTSDate.year}`
-                  : `${selectedRTSDate.monthName} ${padZero(selectedRTSDate.day)}, ${selectedRTSDate.year}`}
+                {displayDate.isGlobalHoliday 
+                  ? `Holiday ${displayDate.holidayDayIndex}, Year ${displayDate.year}`
+                  : `${displayDate.monthName} ${padZero(displayDate.day)}, ${displayDate.year}`}
               </span>
             </div>
           </div>
@@ -55,16 +65,6 @@ export default function Dashboard() {
                 })}
               </span>
             </div>
-
-            <button 
-              onClick={() => {
-                setSelectedRTSDate(null);
-                if (calendarRef.current) calendarRef.current.resetToLive();
-              }}
-              className="ml-4 p-1.5 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white sm:ml-2"
-            >
-              <X className="w-4 h-4" />
-            </button>
           </div>
         </div>
       )}
