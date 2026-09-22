@@ -5,10 +5,11 @@ import DecimalClock from "@/components/DecimalClock";
 import RTSCalendar, { RTSCalendarHandle } from "@/components/RTSCalendar";
 import DaylightGlobe from "@/components/DaylightGlobe";
 import { RTSDate, getGregorianDateFromRTS, padZero } from "@/lib/rts";
-import { CalendarDays, X } from "lucide-react";
+import { CalendarDays, X, ChevronDown } from "lucide-react";
 
 export default function Dashboard() {
   const [selectedRTSDate, setSelectedRTSDate] = useState<RTSDate | null>(null);
+  const [infoExpanded, setInfoExpanded] = useState(false);
   const calendarRef = useRef<RTSCalendarHandle>(null);
 
   // Derive Gregorian date from the selected RTS date
@@ -106,13 +107,47 @@ export default function Dashboard() {
           </div>
           
           <div className="w-full max-w-[350px] p-6 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-400 font-mono leading-relaxed backdrop-blur-sm text-left">
-            <h3 className="text-gray-200 mb-2 font-bold uppercase tracking-wider">How it works</h3>
+            <button 
+              onClick={() => setInfoExpanded(!infoExpanded)}
+              className="w-full flex items-center justify-between text-gray-200 mb-3 font-bold uppercase tracking-wider text-xs hover:text-white transition"
+            >
+              <span>How it works</span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${infoExpanded ? 'rotate-180' : ''}`} />
+            </button>
+            
             <p className="mb-2">
               The standard day is divided into 10 hours, each containing 100 minutes, and 100 seconds. 
             </p>
             <p>
-              Time zones are eliminated. The entire globe shares a single, synchronized timeline. Morning for you might be 05:00, while for someone else it&apos;s 08:00.
+              Time zones are eliminated. The entire globe shares a single, synchronized timeline.
             </p>
+
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${infoExpanded ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+              <div className="space-y-4 border-t border-white/10 pt-4">
+                
+                <div>
+                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">13 Equal Months</h4>
+                  <p>Every month has exactly 28 days — 4 perfect weeks. Every month starts on Monday. Your birthday falls on the same weekday, every year, forever.</p>
+                </div>
+
+                <div>
+                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Global Holiday</h4>
+                  <p>13 × 28 = 364. The 365th day sits outside the calendar — no month, no weekday. A universal day of rest. Leap years add a second holiday.</p>
+                </div>
+
+                <div>
+                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Month Names</h4>
+                  <p>Latin ordinals: Primus, Secundus, Tertius… through Duodecimus. The 13th month is Terminus — &quot;the boundary.&quot;</p>
+                </div>
+
+                <div>
+                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Decimal Conversion</h4>
+                  <p className="mb-1">1 decimal second ≈ 0.864 standard seconds.</p>
+                  <p>1 decimal hour = 2 hrs 24 min standard.</p>
+                </div>
+
+              </div>
+            </div>
           </div>
         </div>
 
