@@ -107,112 +107,103 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
 
   const showLiveButton = (!isLiveView || isSelectedDateDifferent) && !simulatedDate;
 
-  if (viewState.isHoliday) {
-    return (
-      <div className="relative">
-        <div className="flex justify-between items-center mb-4 px-2">
-          <button onClick={handlePrev} className="p-2 hover:bg-white/10 rounded-full transition"><ChevronLeft className="w-5 h-5 text-gray-400" /></button>
-          <div className="text-xl text-gray-500 font-mono">Year {viewState.year}</div>
-          <button onClick={handleNext} className="p-2 hover:bg-white/10 rounded-full transition"><ChevronRight className="w-5 h-5 text-gray-400" /></button>
-        </div>
-        <motion.div 
-          key="holiday"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          onClick={() => onDayClick && onDayClick({
-             year: viewState.year,
-             month: 13,
-             day: 28 + 1, // Fallback for holiday index 1
-             monthName: RTS_MONTHS[12],
-             isGlobalHoliday: true,
-             holidayDayIndex: 1
-          })}
-          className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-indigo-900/80 to-purple-900/80 backdrop-blur-md rounded-2xl border border-purple-500/30 shadow-2xl h-[320px] text-center cursor-pointer hover:border-purple-400 transition relative"
-        >
-          <Sparkles className="w-16 h-16 text-yellow-400 mb-4 animate-pulse" />
-          <h2 className="text-3xl font-bold text-white mb-2 tracking-wider uppercase">Global Holidays</h2>
-          <p className="text-purple-200 text-lg">Global Holidays</p>
-          <p className="mt-6 text-sm text-purple-300/70 max-w-[200px]">
-            The grid is suspended. Enjoy the universal days of rest.
-          </p>
-        </motion.div>
-        {/* Fixed height wrapper to prevent layout shift */}
-        <div className="h-10 mt-4 relative">
-          <AnimatePresence>
-            {showLiveButton && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 flex justify-center"
-              >
-                <button onClick={resetToLive} className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 px-4 py-2 rounded-full flex items-center transition w-full justify-center">
-                  <RotateCcw className="w-3 h-3 mr-2" /> Return to Live Date
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    );
-  }
-
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   
   return (
     <div className="relative">
       <div className="flex flex-col p-6 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl">
-        <div className="flex justify-between items-center mb-6">
-          <button onClick={handlePrev} className="p-2 hover:bg-white/10 rounded-full transition -ml-2">
+        <div className="flex justify-between items-center mb-6 relative z-10">
+          <button onClick={handlePrev} className="p-2 hover:bg-white/10 rounded-full transition -ml-2 z-10">
             <ChevronLeft className="w-5 h-5 text-gray-400" />
           </button>
-          <div className="text-center">
-            <h2 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-1">Month {padZero(viewState.month)}</h2>
-            <div className="text-xl font-light text-white tracking-wide">{RTS_MONTHS[viewState.month - 1]} {viewState.year}</div>
+          <div className="text-center absolute inset-x-0 pointer-events-none">
+            <h2 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-1">
+              {viewState.isHoliday ? "Global Holiday" : `Month ${padZero(viewState.month)}`}
+            </h2>
+            <div className="text-xl font-light text-white tracking-wide">
+              {viewState.isHoliday ? `Year ${viewState.year}` : `${RTS_MONTHS[viewState.month - 1]} ${viewState.year}`}
+            </div>
           </div>
-          <button onClick={handleNext} className="p-2 hover:bg-white/10 rounded-full transition -mr-2">
+          <button onClick={handleNext} className="p-2 hover:bg-white/10 rounded-full transition -mr-2 z-10">
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </button>
         </div>
         
-        <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs text-gray-500 uppercase tracking-wider">
-          {daysOfWeek.map(d => <div key={d}>{d}</div>)}
-        </div>
-        
-        <div className="grid grid-cols-7 gap-2">
-          {Array.from({ length: 28 }).map((_, i) => {
-            const dayNum = i + 1;
-            const isToday = isLiveView && dayNum === liveDate.day;
-            const isSelected = selectedRTSDate && 
-                               selectedRTSDate.year === viewState.year && 
-                               selectedRTSDate.month === viewState.month && 
-                               selectedRTSDate.day === dayNum &&
-                               !selectedRTSDate.isGlobalHoliday;
-            
-            return (
-              <button 
-                key={dayNum}
+        <div className="relative h-[232px] flex flex-col justify-center">
+          <AnimatePresence mode="wait">
+            {viewState.isHoliday ? (
+              <motion.div 
+                key="holiday"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => onDayClick && onDayClick({
                    year: viewState.year,
-                   month: viewState.month,
-                   day: dayNum,
-                   monthName: RTS_MONTHS[viewState.month - 1],
-                   isGlobalHoliday: false
+                   month: 13,
+                   day: 29, // Fallback index
+                   monthName: RTS_MONTHS[12],
+                   isGlobalHoliday: true,
+                   holidayDayIndex: 1
                 })}
-                className={`
-                  flex items-center justify-center w-10 h-10 rounded-lg text-sm font-mono transition-colors focus:outline-none
-                  ${isToday 
-                    ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' 
-                    : isSelected
-                    ? 'bg-white/20 text-white border border-white/40'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10'}
-                `}
+                className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900/60 to-purple-900/60 rounded-xl border border-purple-500/30 text-center cursor-pointer hover:border-purple-400 transition"
               >
-                {dayNum}
-              </button>
-            );
-          })}
+                <Sparkles className="w-10 h-10 text-yellow-400 mb-3 animate-pulse" />
+                <h2 className="text-2xl font-bold text-white mb-1 tracking-wider uppercase">Global Holiday</h2>
+                <p className="mt-1 text-xs text-purple-300/70 max-w-[200px]">
+                  The grid is suspended. Enjoy the universal day of rest.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="grid"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0"
+              >
+                <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs text-gray-500 uppercase tracking-wider">
+                  {daysOfWeek.map(d => <div key={d}>{d}</div>)}
+                </div>
+                
+                <div className="grid grid-cols-7 gap-2">
+                  {Array.from({ length: 28 }).map((_, i) => {
+                    const dayNum = i + 1;
+                    const isToday = isLiveView && dayNum === liveDate.day;
+                    const isSelected = selectedRTSDate && 
+                                       selectedRTSDate.year === viewState.year && 
+                                       selectedRTSDate.month === viewState.month && 
+                                       selectedRTSDate.day === dayNum &&
+                                       !selectedRTSDate.isGlobalHoliday;
+                    
+                    return (
+                      <button 
+                        key={dayNum}
+                        onClick={() => onDayClick && onDayClick({
+                           year: viewState.year,
+                           month: viewState.month,
+                           day: dayNum,
+                           monthName: RTS_MONTHS[viewState.month - 1],
+                           isGlobalHoliday: false
+                        })}
+                        className={`
+                          flex items-center justify-center w-10 h-10 rounded-lg text-sm font-mono transition-colors focus:outline-none
+                          ${isToday 
+                            ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' 
+                            : isSelected
+                            ? 'bg-white/20 text-white border border-white/40'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10'}
+                        `}
+                      >
+                        {dayNum}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Fixed height wrapper to prevent layout shift */}
