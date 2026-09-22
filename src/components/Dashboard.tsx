@@ -162,23 +162,35 @@ export default function Dashboard() {
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${whyExpanded ? 'rotate-180' : ''}`} />
               </button>
 
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${whyExpanded ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${whyExpanded ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
                 <div className="space-y-4 pt-2">
                   <div>
                     <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;Your Time or Mine?&quot;</h4>
-                    <p>Stop doing mental timezone math for global meetings. 04:00 is 04:00 everywhere. Say goodbye to Daylight Saving desyncs.</p>
+                    <p>Scheduling a call across three continents shouldn&apos;t require a conversion chart. Calculating your actual arrival time after a 14-hour flight shouldn&apos;t feel like a logic puzzle. In RTS, 04:00 is 04:00 everywhere.</p>
                   </div>
                   <div>
-                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Time Travel Flights</h4>
-                    <p>No more departing at 10:00, flying for 14 hours, and arriving at 12:00 local time. Durations actually match the clock.</p>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Daylight Saving Ritual</h4>
+                    <p>Twice a year, clocks jump. Meetings are missed. Sleep schedules break. Entire countries debate whether to keep doing it. RTS ends the ritual permanently.</p>
                   </div>
                   <div>
                     <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Developer Nightmare</h4>
                     <p>Eradicate complex <span className="bg-white/10 px-1 rounded">tzdata</span> libraries, offset bugs, and leap second edge-cases from codebases entirely.</p>
                   </div>
                   <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;What&apos;s 2:47 Plus 3:38?&quot;</h4>
+                    <p>Base-60 arithmetic is broken for mental math. Quick — is that 6:25 or 6:15? In decimal time, durations just add up like normal numbers. Time tracking becomes trivial.</p>
+                  </div>
+                  <div>
                     <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">30 Days Hath September...</h4>
-                    <p>Stop memorizing which months have 28, 30, or 31 days. Stop worrying about unequal quarters or February payroll imbalances.</p>
+                    <p>Stop memorizing which months have 28, 30, or 31 days. Stop pulling up a calendar app just to figure out what day of the week the 17th falls on. In RTS, the 17th is always a Wednesday. Always.</p>
+                  </div>
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Unequal Quarters</h4>
+                    <p>Q1 has fewer days than Q3. Monthly payroll hits different depending on the month. Billing cycles never line up. In RTS, every quarter is exactly 91 days.</p>
+                  </div>
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Final Holdout</h4>
+                    <p>We weigh in grams and measure in meters — clean, base-10 systems built for logic. Yet we measure our lives using a base-60 system invented by ancient Babylonians. Time is the last major metric waiting to be modernized.</p>
                   </div>
                 </div>
               </div>
