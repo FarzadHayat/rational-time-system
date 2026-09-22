@@ -98,7 +98,14 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
     viewState.month === liveDate.month && 
     viewState.isHoliday === liveDate.isGlobalHoliday;
 
-  const showLiveButton = (!isLiveView || selectedRTSDate) && !simulatedDate;
+  const isSelectedDateDifferent = selectedRTSDate && (
+    selectedRTSDate.year !== liveDate.year ||
+    selectedRTSDate.month !== liveDate.month ||
+    selectedRTSDate.day !== liveDate.day ||
+    selectedRTSDate.isGlobalHoliday !== liveDate.isGlobalHoliday
+  );
+
+  const showLiveButton = (!isLiveView || isSelectedDateDifferent) && !simulatedDate;
 
   if (viewState.isHoliday) {
     return (
