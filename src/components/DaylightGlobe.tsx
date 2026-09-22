@@ -34,10 +34,17 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
     if (globeRef.current && globeRef.current.scene) {
       const scene = globeRef.current.scene();
       const sunLight = scene.getObjectByName("sunLight");
-      if (sunLight && typeof globeRef.current.getCoords === 'function') {
-        // Place the light far away in the direction of the sun
-        const coords = globeRef.current.getCoords(sunPos.lat, sunPos.lng, 100);
-        sunLight.position.set(coords.x, coords.y, coords.z);
+      const sunMesh = scene.getObjectByName("sunMesh");
+      
+      if (typeof globeRef.current.getCoords === 'function') {
+        // Place the light and the orb far away in the direction of the sun
+        const coords = globeRef.current.getCoords(sunPos.lat, sunPos.lng, 50); // distance 50x globe radius
+        if (sunLight) {
+          sunLight.position.set(coords.x, coords.y, coords.z);
+        }
+        if (sunMesh) {
+          sunMesh.position.set(coords.x, coords.y, coords.z);
+        }
       }
     }
   }, [sunPos.lat, sunPos.lng]);
@@ -72,18 +79,26 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
              sceneLights.forEach((l: any) => scene.remove(l));
 
              // Add our own ambient light (very dim, for the dark side)
-             const ambientLight = new THREE.AmbientLight(0x222222, 0.4);
+             const ambientLight = new THREE.AmbientLight(0x222222, 0.2); // even dimmer
              scene.add(ambientLight);
 
              // Add directional sun light
-             const sunLight = new THREE.DirectionalLight(0xffffff, 3);
+             const sunLight = new THREE.DirectionalLight(0xffffff, 5); // very bright
              sunLight.name = "sunLight";
              scene.add(sunLight);
+
+             // Create a visual sun orb
+             const sunGeometry = new THREE.SphereGeometry(15, 32, 32);
+             const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
+             const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+             sunMesh.name = "sunMesh";
+             scene.add(sunMesh);
              
              // Initial position
              if (typeof globeRef.current.getCoords === 'function') {
-               const coords = globeRef.current.getCoords(sunPos.lat, sunPos.lng, 100);
+               const coords = globeRef.current.getCoords(sunPos.lat, sunPos.lng, 50);
                sunLight.position.set(coords.x, coords.y, coords.z);
+               sunMesh.position.set(coords.x, coords.y, coords.z);
              }
            }
         }}
