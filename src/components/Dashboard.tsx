@@ -46,7 +46,7 @@ export default function Dashboard() {
               <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-gray-500 font-bold">RTS Date</span>
               <span className="text-xs sm:text-sm font-mono text-white whitespace-nowrap">
                 {displayDate.isGlobalHoliday 
-                  ? `Holiday ${displayDate.holidayDayIndex}, Year ${displayDate.year}`
+                  ? `${displayDate.holidayDayIndex === 2 ? 'Leap Day' : 'Year Day'}, Year ${displayDate.year}`
                   : `${displayDate.monthName} ${padZero(displayDate.day)}, ${displayDate.year}`}
               </span>
             </div>
