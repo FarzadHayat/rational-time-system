@@ -36,15 +36,12 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
       const sunLight = scene.getObjectByName("sunLight");
       const sunMesh = scene.getObjectByName("sunMesh");
       
-      if (typeof globeRef.current.getCoords === 'function') {
-        // Place the light and the orb far away in the direction of the sun
-        const coords = globeRef.current.getCoords(sunPos.lat, sunPos.lng, 50); // distance 50x globe radius
-        if (sunLight) {
-          sunLight.position.set(coords.x, coords.y, coords.z);
-        }
-        if (sunMesh) {
-          sunMesh.position.set(coords.x, coords.y, coords.z);
-        }
+      const coords = latLngToVector3(sunPos.lat, sunPos.lng, 50); // distance 50x globe radius
+      if (sunLight) {
+        sunLight.position.copy(coords);
+      }
+      if (sunMesh) {
+        sunMesh.position.copy(coords);
       }
     }
   }, [sunPos.lat, sunPos.lng]);
@@ -95,16 +92,28 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
              scene.add(sunMesh);
              
              // Initial position
-             if (typeof globeRef.current.getCoords === 'function') {
-               const coords = globeRef.current.getCoords(sunPos.lat, sunPos.lng, 50);
-               sunLight.position.set(coords.x, coords.y, coords.z);
-               sunMesh.position.set(coords.x, coords.y, coords.z);
-             }
+             const coords = latLngToVector3(sunPos.lat, sunPos.lng, 50);
+             sunLight.position.copy(coords);
+             sunMesh.position.copy(coords);
            }
         }}
       />
     </div>
   );
+}
+
+// Manual conversion since getCoords isn't exposed on the ref directly
+function latLngToVector3(lat: number, lng: number, radiusScale: number = 1) {
+  const GLOBE_RADIUS = 100; // default in react-globe.gl
+  const r = GLOBE_RADIUS * radiusScale;
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  
+  const x = -(r * Math.sin(phi) * Math.cos(theta));
+  const z = (r * Math.sin(phi) * Math.sin(theta));
+  const y = r * Math.cos(phi);
+  
+  return new THREE.Vector3(x, y, z);
 }
 
 function getSunPosition(date: Date) {
