@@ -144,7 +144,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           </button>
         </div>
         
-        <div className="relative h-[232px] flex flex-col justify-center">
+        <div className="relative h-[208px] flex flex-col justify-center">
           <AnimatePresence mode="wait">
             {viewState.isHoliday ? (
               <motion.div 
