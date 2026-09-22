@@ -117,7 +117,7 @@ export default function Dashboard() {
               <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'info' ? 'rotate-180' : ''}`} />
             </button>
             
-            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'info' ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'info' ? 'max-h-[1200px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-4 pt-2">
                 
                 <div>
@@ -148,6 +148,17 @@ export default function Dashboard() {
                   <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Decimal Conversion</h4>
                   <p className="mb-1">1 decimal second ≈ 0.864 standard seconds.</p>
                   <p>1 decimal hour = 2 hrs 24 min standard.</p>
+                </div>
+
+                <div>
+                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Notation & Formats</h4>
+                  <p className="mb-1">Dates are written as <span className="bg-white/10 px-1 rounded">YYYY.MM.DD</span> (e.g. 2026.07.15).</p>
+                  <p>Because the Global Holiday sits outside the month grid, it is written purely as <span className="bg-white/10 px-1 rounded">YYYY.H1</span> (and <span className="bg-white/10 px-1 rounded">YYYY.H2</span> for leap years).</p>
+                </div>
+
+                <div>
+                  <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Historical Lineage</h4>
+                  <p>RTS is a modern fusion of three brilliant historical systems: the 13-month International Fixed Calendar (used by Kodak from 1928–1989), French Republican Decimal Time (1793), and the timezone-free Swatch Internet Time (1998).</p>
                 </div>
 
               </div>
