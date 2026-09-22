@@ -231,7 +231,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           {showLiveButton && (
             <motion.div 
               initial={{ height: 0, opacity: 0, marginTop: 0 }}
-              animate={{ height: "auto", opacity: 1, marginTop: 24 }}
+              animate={{ height: "auto", opacity: 1, marginTop: 12 }}
               exit={{ height: 0, opacity: 0, marginTop: 0 }}
               transition={{ duration: 0.2 }}
               className="flex justify-center overflow-hidden"
