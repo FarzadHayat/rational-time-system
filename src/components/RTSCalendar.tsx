@@ -206,24 +206,21 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           </AnimatePresence>
         </div>
 
-        {/* Fixed height wrapper to prevent layout shift */}
-        <div className="h-10 mt-6 relative">
-          <AnimatePresence>
-            {showLiveButton && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 flex justify-center"
-              >
-                <button onClick={resetToLive} className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 px-4 py-2 rounded-full flex items-center transition w-full justify-center">
-                  <RotateCcw className="w-3 h-3 mr-2" /> Return to Live Date
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        <AnimatePresence>
+          {showLiveButton && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0, marginTop: 0 }}
+              animate={{ height: "auto", opacity: 1, marginTop: 24 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex justify-center overflow-hidden"
+            >
+              <button onClick={resetToLive} className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 px-4 py-2 rounded-full flex items-center transition w-full justify-center">
+                <RotateCcw className="w-3 h-3 mr-2" /> Return to Live Date
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

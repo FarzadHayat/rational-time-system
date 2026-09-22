@@ -74,7 +74,7 @@ export default function Dashboard() {
       <div className="relative z-10 w-full min-h-screen lg:h-screen grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 lg:p-10 pt-28 lg:pt-24 lg:overflow-hidden">
         
         {/* Left Column: Calendar & Info */}
-        <div className="lg:col-span-3 flex flex-col space-y-6 lg:space-y-8 z-20 lg:justify-center items-center lg:items-start text-center lg:text-left">
+        <div className="lg:col-span-3 flex flex-col space-y-6 lg:space-y-8 z-20 lg:pt-8 items-center lg:items-start text-center lg:text-left">
           <div>
             <h1 className="text-3xl font-light tracking-widest uppercase mb-2">RTS</h1>
             <p className="text-gray-500 text-sm font-mono tracking-tight leading-relaxed max-w-xs">
@@ -106,7 +106,7 @@ export default function Dashboard() {
         </div>
 
         {/* Right Column: Info Accordions */}
-        <div className="lg:col-span-3 flex flex-col space-y-6 lg:space-y-8 z-20 items-center lg:items-end lg:justify-center text-center lg:text-right">
+        <div className="lg:col-span-3 flex flex-col space-y-6 lg:space-y-8 z-20 items-center lg:items-end lg:pt-8 text-center lg:text-right">
           
           <div className="w-full max-w-[350px] p-6 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-400 font-mono leading-relaxed backdrop-blur-sm text-left flex flex-col">
             
