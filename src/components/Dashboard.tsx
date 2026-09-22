@@ -10,6 +10,7 @@ import { CalendarDays, X, ChevronDown } from "lucide-react";
 export default function Dashboard() {
   const [selectedRTSDate, setSelectedRTSDate] = useState<RTSDate | null>(null);
   const [infoExpanded, setInfoExpanded] = useState(false);
+  const [whyExpanded, setWhyExpanded] = useState(false);
   const calendarRef = useRef<RTSCalendarHandle>(null);
 
   // Derive Gregorian date from the selected RTS date
@@ -106,7 +107,8 @@ export default function Dashboard() {
             <DecimalClock />
           </div>
           
-          <div className="w-full max-w-[350px] p-6 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-400 font-mono leading-relaxed backdrop-blur-sm text-left">
+          <div className="w-full max-w-[350px] p-6 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-400 font-mono leading-relaxed backdrop-blur-sm text-left flex flex-col">
+            
             <button 
               onClick={() => setInfoExpanded(!infoExpanded)}
               className="w-full flex items-center justify-between text-gray-200 mb-3 font-bold uppercase tracking-wider text-xs hover:text-white transition"
@@ -148,6 +150,39 @@ export default function Dashboard() {
 
               </div>
             </div>
+
+            {/* WHY SWITCH? (Sales Pitch) */}
+            <div className="border-t border-white/10 mt-6 pt-4">
+              <button 
+                onClick={() => setWhyExpanded(!whyExpanded)}
+                className="w-full flex items-center justify-between text-gray-200 font-bold uppercase tracking-wider text-xs hover:text-white transition"
+              >
+                <span>Why switch?</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${whyExpanded ? 'rotate-180' : ''}`} />
+              </button>
+
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${whyExpanded ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                <div className="space-y-4 pt-2">
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">&quot;Your Time or Mine?&quot;</h4>
+                    <p>Stop doing mental timezone math for global meetings. 04:00 is 04:00 everywhere. Say goodbye to Daylight Saving desyncs.</p>
+                  </div>
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">Time Travel Flights</h4>
+                    <p>No more departing at 10:00, flying for 14 hours, and arriving at 12:00 local time. Durations actually match the clock.</p>
+                  </div>
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">The Developer Nightmare</h4>
+                    <p>Eradicate complex <span className="bg-white/10 px-1 rounded">tzdata</span> libraries, offset bugs, and leap second edge-cases from codebases entirely.</p>
+                  </div>
+                  <div>
+                    <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">30 Days Hath September...</h4>
+                    <p>Stop memorizing which months have 28, 30, or 31 days. Stop worrying about unequal quarters or February payroll imbalances.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
