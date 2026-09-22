@@ -126,7 +126,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-indigo-900/80 to-purple-900/80 backdrop-blur-md rounded-2xl border border-purple-500/30 shadow-2xl h-[320px] text-center cursor-pointer hover:border-purple-400 transition"
         >
           <Sparkles className="w-16 h-16 text-yellow-400 mb-4 animate-pulse" />
-          <h2 className="text-3xl font-bold text-white mb-2 tracking-wider uppercase">Unum & Duo</h2>
+          <h2 className="text-3xl font-bold text-white mb-2 tracking-wider uppercase">Global Holidays</h2>
           <p className="text-purple-200 text-lg">Global Holidays</p>
           <p className="mt-6 text-sm text-purple-300/70 max-w-[200px]">
             The grid is suspended. Enjoy the universal days of rest.

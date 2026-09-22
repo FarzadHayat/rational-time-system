@@ -82,7 +82,7 @@ export function getRTSDate(date: Date): RTSDate {
       year,
       month: 13, // Fallback to last month
       day: 28 + holidayDayIndex, // Fallback day, though won't be used in UI grid
-      monthName: holidayDayIndex === 1 ? "Unum" : "Duo",
+      monthName: holidayDayIndex === 1 ? "Year Day" : "Leap Day",
       isGlobalHoliday: true,
       holidayDayIndex,
     };
