@@ -31,13 +31,15 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
   const activeDate = simulatedDate || new Date();
   const sunPos = getSunPosition(activeDate);
 
-  // Install custom lights via the .lights() method on the ref (not a JSX prop — it's untyped)
+  // Install custom lights via the .lights() method on the ref
   useEffect(() => {
     if (globeRef.current && !lightsInstalledRef.current) {
-      // Check if the .lights method exists on the ref
       if (typeof globeRef.current.lights === 'function') {
-        const ambientLight = new THREE.AmbientLight(0x333333, 0.5);
-        const sunLight = new THREE.DirectionalLight(0xffffff, 3);
+        // Very low ambient light to make the night side truly dark
+        const ambientLight = new THREE.AmbientLight(0x222222, Math.PI / 4);
+        
+        // Very bright directional light to act as the sun
+        const sunLight = new THREE.DirectionalLight(0xffffff, Math.PI * 3);
         const coords = latLngToVector3(sunPos.lat, sunPos.lng, 5);
         sunLight.position.copy(coords);
 
@@ -71,6 +73,29 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
         atmosphereColor="lightskyblue"
         atmosphereAltitude={0.15}
         enablePointerInteraction={true}
+        customLayerData={[{ lat: sunPos.lat, lng: sunPos.lng }]}
+        customThreeObject={() => {
+          // Add a glowing sun sphere
+          const sunGeometry = new THREE.SphereGeometry(15, 32, 32);
+          const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xfff5e6 });
+          const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+          
+          // Add a glow/halo effect using a slightly larger transparent sphere
+          const glowGeometry = new THREE.SphereGeometry(25, 32, 32);
+          const glowMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xffaa00, 
+            transparent: true, 
+            opacity: 0.4 
+          });
+          const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+          sunMesh.add(glowMesh);
+          
+          return sunMesh;
+        }}
+        customThreeObjectUpdate={(obj: any, d: any) => {
+          const coords = latLngToVector3(d.lat, d.lng, 5);
+          Object.assign(obj.position, coords);
+        }}
       />
     </div>
   );

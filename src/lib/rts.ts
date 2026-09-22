@@ -30,6 +30,16 @@ export interface RTSDate {
 }
 
 /**
+ * Formats an RTSDate into the official string representation (e.g., "2026.07.15" or "2026.H1")
+ */
+export function formatRTSDate(date: RTSDate): string {
+  if (date.isGlobalHoliday) {
+    return `${date.year}.H${date.holidayDayIndex}`;
+  }
+  return `${date.year}.${padZero(date.month)}.${padZero(date.day)}`;
+}
+
+/**
  * Converts a standard Date to RTS Decimal Time (based on UTC)
  */
 export function getDecimalTime(date: Date): DecimalTime {
