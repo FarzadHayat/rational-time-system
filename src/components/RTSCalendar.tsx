@@ -2,7 +2,7 @@
 
 import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { getRTSDate, RTSDate, RTS_MONTHS } from "@/lib/rts";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 
 interface RTSCalendarProps {
@@ -98,14 +98,11 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
     viewState.month === liveDate.month && 
     viewState.isHoliday === liveDate.isGlobalHoliday;
 
+  const showLiveButton = (!isLiveView || selectedRTSDate) && !simulatedDate;
+
   if (viewState.isHoliday) {
     return (
       <div className="relative">
-        {!isLiveView && !simulatedDate && (
-          <button onClick={resetToLive} className="absolute -top-8 right-0 text-xs text-blue-400 hover:text-blue-300 flex items-center">
-            <RotateCcw className="w-3 h-3 mr-1" /> Live
-          </button>
-        )}
         <div className="flex justify-between items-center mb-4 px-2">
           <button onClick={handlePrev} className="p-2 hover:bg-white/10 rounded-full transition"><ChevronLeft className="w-5 h-5 text-gray-400" /></button>
           <div className="text-xl text-gray-500 font-mono">Year {viewState.year}</div>
@@ -123,7 +120,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
              isGlobalHoliday: true,
              holidayDayIndex: 1
           })}
-          className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-indigo-900/80 to-purple-900/80 backdrop-blur-md rounded-2xl border border-purple-500/30 shadow-2xl h-[320px] text-center cursor-pointer hover:border-purple-400 transition"
+          className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-indigo-900/80 to-purple-900/80 backdrop-blur-md rounded-2xl border border-purple-500/30 shadow-2xl h-[320px] text-center cursor-pointer hover:border-purple-400 transition relative"
         >
           <Sparkles className="w-16 h-16 text-yellow-400 mb-4 animate-pulse" />
           <h2 className="text-3xl font-bold text-white mb-2 tracking-wider uppercase">Global Holidays</h2>
@@ -132,6 +129,21 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
             The grid is suspended. Enjoy the universal days of rest.
           </p>
         </motion.div>
+        
+        <AnimatePresence>
+          {showLiveButton && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1, marginTop: 12 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0 }}
+              className="flex justify-center overflow-hidden"
+            >
+              <button onClick={resetToLive} className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 px-4 py-2 rounded-full flex items-center transition w-full justify-center">
+                <RotateCcw className="w-3 h-3 mr-2" /> Return to Live Date
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
@@ -140,11 +152,6 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
   
   return (
     <div className="relative">
-      {!isLiveView && !simulatedDate && (
-        <button onClick={resetToLive} className="absolute -top-8 right-0 text-xs text-blue-400 hover:text-blue-300 flex items-center">
-          <RotateCcw className="w-3 h-3 mr-1" /> Live
-        </button>
-      )}
       <div className="flex flex-col p-6 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl">
         <div className="flex justify-between items-center mb-6">
           <button onClick={handlePrev} className="p-2 hover:bg-white/10 rounded-full transition -ml-2">
@@ -197,6 +204,21 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
             );
           })}
         </div>
+
+        <AnimatePresence>
+          {showLiveButton && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1, marginTop: 24 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0 }}
+              className="flex justify-center overflow-hidden"
+            >
+              <button onClick={resetToLive} className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 px-4 py-2 rounded-full flex items-center transition w-full justify-center">
+                <RotateCcw className="w-3 h-3 mr-2" /> Return to Live Date
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
