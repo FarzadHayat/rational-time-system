@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import * as THREE from 'three';
 
@@ -11,6 +11,8 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date | null }) {
   const [mounted, setMounted] = useState(false);
   const globeRef = useRef<any>(null);
+  const lightsInstalledRef = useRef(false);
+  const sunLightRef = useRef<THREE.DirectionalLight | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -29,28 +31,30 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
   const activeDate = simulatedDate || new Date();
   const sunPos = getSunPosition(activeDate);
 
-  // Create the custom lights array that react-globe.gl manages via its `lights` prop.
-  // This is the ONLY correct way to control lighting — the library owns the scene lights.
-  const customLights = useMemo(() => {
-    const ambientLight = new THREE.AmbientLight(0x333333, 0.5);
+  // Install custom lights via the .lights() method on the ref (not a JSX prop — it's untyped)
+  useEffect(() => {
+    if (globeRef.current && !lightsInstalledRef.current) {
+      // Check if the .lights method exists on the ref
+      if (typeof globeRef.current.lights === 'function') {
+        const ambientLight = new THREE.AmbientLight(0x333333, 0.5);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 3);
+        const coords = latLngToVector3(sunPos.lat, sunPos.lng, 5);
+        sunLight.position.copy(coords);
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 3);
-    const coords = latLngToVector3(sunPos.lat, sunPos.lng, 5);
-    sunLight.position.copy(coords);
-
-    return [ambientLight, sunLight];
-  // We intentionally only create lights once and update position via effect
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+        sunLightRef.current = sunLight;
+        globeRef.current.lights([ambientLight, sunLight]);
+        lightsInstalledRef.current = true;
+      }
+    }
+  }, [mounted, sunPos.lat, sunPos.lng]);
 
   // Update light position when time changes
   useEffect(() => {
-    const sunLight = customLights.find((l): l is THREE.DirectionalLight => l instanceof THREE.DirectionalLight);
-    if (sunLight) {
+    if (sunLightRef.current) {
       const coords = latLngToVector3(sunPos.lat, sunPos.lng, 5);
-      sunLight.position.copy(coords);
+      sunLightRef.current.position.copy(coords);
     }
-  }, [sunPos.lat, sunPos.lng, customLights]);
+  }, [sunPos.lat, sunPos.lng]);
 
   if (!mounted) {
     return <div className="w-full h-full min-h-[500px] flex items-center justify-center text-gray-500 font-mono text-sm">Initializing Universal View...</div>;
@@ -67,7 +71,6 @@ export default function DaylightGlobe({ simulatedDate }: { simulatedDate?: Date 
         atmosphereColor="lightskyblue"
         atmosphereAltitude={0.15}
         enablePointerInteraction={true}
-        lights={customLights}
       />
     </div>
   );
