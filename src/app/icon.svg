@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Background Space -->
+  <rect width="256" height="256" fill="#000000"/>
+  
+  <!-- Outer Glow / Atmosphere -->
+  <circle cx="128" cy="128" r="90" fill="#1e3a8a" opacity="0.5"/>
+  <circle cx="128" cy="128" r="80" fill="#000000"/>
+  
+  <!-- Globe Grid (Minimal) -->
+  <circle cx="128" cy="128" r="80" stroke="#3b82f6" stroke-width="4" fill="none"/>
+  <ellipse cx="128" cy="128" rx="40" ry="80" stroke="#3b82f6" stroke-width="4" fill="none" opacity="0.6"/>
+  <line x1="48" y1="128" x2="208" y2="128" stroke="#3b82f6" stroke-width="4" opacity="0.6"/>
+  
+  <!-- Sun / Terminator Line -->
+  <path d="M 128 48 A 80 80 0 0 1 128 208 A 30 80 0 0 0 128 48" fill="#fcd34d" opacity="0.8"/>
+  
+  <!-- Clock Hands (Decimal Time) -->
+  <circle cx="128" cy="128" r="6" fill="#ffffff"/>
+  <line x1="128" y1="128" x2="168" y2="88" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+  <line x1="128" y1="128" x2="100" y2="60" stroke="#93c5fd" stroke-width="4" stroke-linecap="round"/>
+</svg>
