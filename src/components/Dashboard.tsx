@@ -111,23 +111,25 @@ export default function Dashboard() {
             
             <button 
               onClick={() => setActiveAccordion(activeAccordion === 'info' ? null : 'info')}
-              className="w-full flex items-center justify-between text-gray-200 mb-3 font-bold uppercase tracking-wider text-xs hover:text-white transition"
+              className="w-full flex items-center justify-between text-gray-200 font-bold uppercase tracking-wider text-xs hover:text-white transition"
             >
               <span>How it works</span>
               <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeAccordion === 'info' ? 'rotate-180' : ''}`} />
             </button>
             
-            <p className="mb-2">
-              The standard day is divided into 10 hours, each containing 100 minutes, and 100 seconds. 
-            </p>
-            <p>
-              Time zones are eliminated. The entire globe shares a single, synchronized timeline.
-            </p>
-
             <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeAccordion === 'info' ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-              <div className="space-y-4 border-t border-white/10 pt-4">
+              <div className="space-y-4 pt-2">
                 
                 <div>
+                  <p className="mb-2">
+                    The standard day is divided into 10 hours, each containing 100 minutes, and 100 seconds. 
+                  </p>
+                  <p>
+                    Time zones are eliminated. The entire globe shares a single, synchronized timeline.
+                  </p>
+                </div>
+
+                <div className="border-t border-white/10 pt-4">
                   <h4 className="text-gray-300 font-bold uppercase tracking-wider mb-1">13 Equal Months</h4>
                   <p>Every month has exactly 28 days — 4 perfect weeks. Every month starts on Monday. Your birthday falls on the same weekday, every year, forever.</p>
                 </div>
