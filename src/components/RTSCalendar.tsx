@@ -151,7 +151,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
                 <Sparkles className="w-10 h-10 text-yellow-400 mb-3 animate-pulse" />
                 <h2 className="text-2xl font-bold text-white mb-1 tracking-wider uppercase">Global Holiday</h2>
                 <p className="mt-1 text-xs text-purple-300/70 max-w-[200px]">
-                  The grid is suspended. Enjoy the universal day of rest.
+                  A day outside of time. Enjoy the universal day of rest.
                 </p>
               </motion.div>
             ) : (
