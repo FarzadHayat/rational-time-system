@@ -132,7 +132,7 @@ const RTSCalendar = forwardRef<RTSCalendarHandle, RTSCalendarProps>(
           <div className="text-center absolute inset-x-0 pointer-events-none">
             <h2 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-1">
               {viewState.isHoliday 
-                ? (viewState.holidayIndex === 2 ? "Global Holiday II" : "Global Holiday I")
+                ? (viewState.holidayIndex === 2 ? "Leap Day" : "Year Day")
                 : `Month ${padZero(viewState.month)}`}
             </h2>
             <div className="text-xl font-light text-white tracking-wide">

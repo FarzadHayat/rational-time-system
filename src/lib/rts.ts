@@ -34,7 +34,7 @@ export interface RTSDate {
  */
 export function formatRTSDate(date: RTSDate): string {
   if (date.isGlobalHoliday) {
-    return `${date.year}.H${date.holidayDayIndex}`;
+    return `${date.year} ${date.holidayDayIndex === 2 ? 'Leap Day' : 'Year Day'}`;
   }
   return `${date.year}.${padZero(date.month)}.${padZero(date.day)}`;
 }
